@@ -9,6 +9,14 @@ import java.util.List;
 @Getter
 public class Planet {
 
+    static Planet planet;
+    public static Planet getPlanet() {
+        if (planet == null) {
+            planet = new Planet("Mars", 100, 20);
+        }
+        return planet;
+    }
+
     private String name;
     private int size;
     private boolean complete;
@@ -21,7 +29,7 @@ public class Planet {
         this.complete = false;
         this.numberElements = numberElements;
         createObstacle();
-
+        planet = this;
     }
 
     public void addRover(Rover rover) {
