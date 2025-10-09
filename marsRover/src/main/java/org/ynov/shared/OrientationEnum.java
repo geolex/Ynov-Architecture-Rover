@@ -2,7 +2,7 @@ package org.ynov.shared;
 
 public enum OrientationEnum {
     North,
-    South,
     East,
+    South,
     West
 }
