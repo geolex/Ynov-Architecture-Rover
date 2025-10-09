@@ -2,11 +2,16 @@
 package org.ynov.rover;
 
 import lombok.Getter;
-import org.ynov.shared.*;
+import org.ynov.shared.Information;
+import org.ynov.shared.Instruction;
+import org.ynov.shared.InstructionEnum;
+import org.ynov.shared.OrientationEnum;
+import org.ynov.shared.Vector2;
 
 import java.util.Vector;
 
-public class Rover implements IInstructable {
+public class Rover extends Element implements IInstructable {
+
     @Getter
     private Vector2 position;
     @Getter
@@ -14,6 +19,7 @@ public class Rover implements IInstructable {
     private Planet planet;
 
     public Rover(Planet planet, OrientationEnum orientation) {
+        super(TypeElement.ROVER);
         this.position = new Vector2(0, 0);
         this.orientation = orientation;
         this.planet = planet;
@@ -27,18 +33,34 @@ public class Rover implements IInstructable {
         switch (instruction) {
             case Forward:
                 switch (orientation) {
-                    case North: y++; break;
-                    case South: y--; break;
-                    case East:  x++; break;
-                    case West:  x--; break;
+                    case North:
+                        y++;
+                        break;
+                    case South:
+                        y--;
+                        break;
+                    case East:
+                        x++;
+                        break;
+                    case West:
+                        x--;
+                        break;
                 }
                 break;
             case Backward:
                 switch (orientation) {
-                    case North: y--; break;
-                    case South: y++; break;
-                    case East:  x--; break;
-                    case West:  x++; break;
+                    case North:
+                        y--;
+                        break;
+                    case South:
+                        y++;
+                        break;
+                    case East:
+                        x--;
+                        break;
+                    case West:
+                        x++;
+                        break;
                 }
                 break;
             case TurnLeft:
@@ -71,20 +93,28 @@ public class Rover implements IInstructable {
 
     private OrientationEnum turnLeft(OrientationEnum ori) {
         switch (ori) {
-            case North: return OrientationEnum.West;
-            case West:  return OrientationEnum.South;
-            case South: return OrientationEnum.East;
-            case East:  return OrientationEnum.North;
+            case North:
+                return OrientationEnum.West;
+            case West:
+                return OrientationEnum.South;
+            case South:
+                return OrientationEnum.East;
+            case East:
+                return OrientationEnum.North;
         }
         return ori;
     }
 
     private OrientationEnum turnRight(OrientationEnum ori) {
         switch (ori) {
-            case North: return OrientationEnum.East;
-            case East:  return OrientationEnum.South;
-            case South: return OrientationEnum.West;
-            case West:  return OrientationEnum.North;
+            case North:
+                return OrientationEnum.East;
+            case East:
+                return OrientationEnum.South;
+            case South:
+                return OrientationEnum.West;
+            case West:
+                return OrientationEnum.North;
         }
         return ori;
     }

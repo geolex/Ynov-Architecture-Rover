@@ -1,5 +1,8 @@
 package org.ynov.shared;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class Vector2 {
     public int x;
     public int y;
