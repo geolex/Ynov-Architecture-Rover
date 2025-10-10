@@ -29,6 +29,8 @@ public class MissionControl implements KeyListener {
     }
 
     private void ReadString(){
+        currentInstructions.clear();
+
         int input;
         while (true) {
             try {
