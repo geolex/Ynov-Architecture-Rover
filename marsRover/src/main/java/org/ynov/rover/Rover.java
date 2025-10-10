@@ -3,7 +3,7 @@ package org.ynov.rover;
 
 import lombok.Getter;
 import org.ynov.shared.*;
-
+import java.io.IOException;
 import java.util.Vector;
 
 public class Rover extends Element implements IInstructable {
@@ -91,6 +91,20 @@ public class Rover extends Element implements IInstructable {
         return ori;
     }
 
+    // src/main/java/org/ynov/rover/Rover.java
+    public void listenAndExecute() {
+        try {
+            String data;
+            while ((data = connection.in.readLine()) != null) {
+                Vector<Instruction> instructions = Instruction.Decode(data);
+                Information info = ProcessInstruction(instructions);
+                connection.out.println(info.toString());
+                connection.out.flush();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     @Override
