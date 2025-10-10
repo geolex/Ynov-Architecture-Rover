@@ -36,7 +36,6 @@ public class MissionControl implements KeyListener {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            System.out.print((char) input);
 
             currentInstructions.add(new Instruction(switch (input) {
                 case 'z' -> InstructionEnum.Forward;
