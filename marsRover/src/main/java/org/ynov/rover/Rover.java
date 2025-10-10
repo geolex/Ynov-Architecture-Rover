@@ -18,7 +18,7 @@ public class Rover extends Element implements IInstructable {
         super(TypeElement.ROVER);
         this.position = new Vector2(0, 0);
         this.orientation = orientation;
-        this.connection = CommunicationManager.Instance().communicator.OpenCommunication();
+        this.connection = CommunicationManager.Instance().communicator.ConnectToCommunication();
     }
 
     public boolean move(InstructionEnum instruction) {
