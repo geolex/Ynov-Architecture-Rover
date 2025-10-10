@@ -99,7 +99,7 @@ public class Rover extends Element implements IInstructable {
                 System.out.println(data);
                 Vector<Instruction> instructions = Instruction.Decode(data);
                 Information info = ProcessInstruction(instructions);
-                connection.out.println(info.toString());
+                connection.out.println(Information.Encode(info));
                 connection.out.flush();
             }
         } catch (IOException e) {
