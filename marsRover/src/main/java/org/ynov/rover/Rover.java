@@ -91,13 +91,20 @@ public class Rover extends Element implements IInstructable {
         return ori;
     }
 
-    // src/main/java/org/ynov/rover/Rover.java
     public void listenAndExecute() {
         try {
-            String data;
-            while ((data = connection.in.readLine()) != null) {
-                System.out.println(data);
-                Vector<Instruction> instructions = Instruction.Decode(data);
+            while (true) {
+                String last = connection.in.readLine();
+                if (last == null) break;
+
+
+                while (connection.in.ready()) {
+                    String next = connection.in.readLine();
+                    if (next == null) break;
+                }
+
+                System.out.println(last + "-> commande recu");
+                Vector<Instruction> instructions = Instruction.Decode(last);
                 Information info = ProcessInstruction(instructions);
                 connection.out.println(Information.Encode(info));
                 connection.out.flush();
@@ -106,6 +113,7 @@ public class Rover extends Element implements IInstructable {
             e.printStackTrace();
         }
     }
+
 
 
     @Override
