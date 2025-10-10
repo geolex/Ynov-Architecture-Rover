@@ -17,15 +17,15 @@ public class MissionControl implements KeyListener {
     Connection connection;
 
     public void Initialize(){
-        System.out.printf("Welcome to Kerbal's Mars Rover Program");
+        System.out.println("Welcome to Kerbal's Mars Rover Program");
 
-        connection = CommunicationManager.Instance().communicator.OpenCommunication();
+        connection = CommunicationManager.Instance().communicator.HostCommunication();
 
         PromptUser();
     }
 
     private void PromptUser(){
-        System.out.printf("What are your instructions?");
+        System.out.println("What are your instructions?");
         isPromptingUser = true;
     }
 

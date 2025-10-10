@@ -1,8 +1,7 @@
 package org.ynov.shared;
 
-import java.net.ServerSocket;
-
 public interface ICommunicator {
-    Connection OpenCommunication();
+    Connection HostCommunication();
+    Connection ConnectToCommunication();
     void CloseCommunication(Connection connection);
 }
