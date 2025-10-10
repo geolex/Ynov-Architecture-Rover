@@ -3,8 +3,12 @@ package org.ynov.shared;
 import java.util.Vector;
 
 public class Instruction {
+
     public final InstructionEnum instruction;
 
+    public Instruction() {
+        this.instruction = null;
+    }
     public Instruction(InstructionEnum instruction) {
         this.instruction = instruction;
     }
