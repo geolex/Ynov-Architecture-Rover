@@ -96,6 +96,7 @@ public class Rover extends Element implements IInstructable {
         try {
             String data;
             while ((data = connection.in.readLine()) != null) {
+                System.out.println(data);
                 Vector<Instruction> instructions = Instruction.Decode(data);
                 Information info = ProcessInstruction(instructions);
                 connection.out.println(info.toString());
