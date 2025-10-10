@@ -10,13 +10,6 @@ import java.util.List;
 public class Planet {
 
     static Planet planet;
-    public static Planet getPlanet() {
-        if (planet == null) {
-            planet = new Planet("Mars", 100, 20);
-        }
-        return planet;
-    }
-
     private String name;
     private int size;
     private boolean complete;
@@ -32,9 +25,28 @@ public class Planet {
         planet = this;
     }
 
+
+    public static Planet getPlanet() {
+        if (planet == null) {
+            planet = new Planet("Mars", 100, 20);
+        }
+        return planet;
+    }
+
+    public Rover getRover() {
+        for (Element element : elements) {
+            if (element instanceof Rover) {
+                return (Rover) element;
+            }
+        };
+        return null;
+    }
+
     public void addRover(Rover rover) {
-        if (rover != null && obstacleAlreadyExists(rover.getPosition().x, rover.getPosition().y)) {
+        if (rover != null && !obstacleAlreadyExists(rover.getPosition().x, rover.getPosition().y)) {
             elements.add(rover);
+        }else {
+            System.out.println(rover.getPosition().x + " " + rover.getPosition().y + " ne peut etre ajoute.");
         }
     }
 
