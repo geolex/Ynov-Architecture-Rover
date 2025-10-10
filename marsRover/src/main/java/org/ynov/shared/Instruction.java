@@ -13,11 +13,11 @@ public class Instruction {
         this.instruction = instruction;
     }
 
-    private static String EncodeOne(InstructionEnum instruction){
-        return instruction.toString();
+    private static String EncodeOne(Instruction instruction){
+        return instruction.instruction.toString();
     };
 
-    public static String Encode(Vector<InstructionEnum> instructions){
+    public static String Encode(Vector<Instruction> instructions){
         String result = "";
         for(int i = 0; i < instructions.size(); i++){
             result += EncodeOne(instructions.get(i)) + ((i < instructions.size()-1)? "," : "");
