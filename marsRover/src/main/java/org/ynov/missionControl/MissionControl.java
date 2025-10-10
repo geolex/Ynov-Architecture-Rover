@@ -1,9 +1,6 @@
 package org.ynov.missionControl;
 
-import org.ynov.shared.CommunicationManager;
-import org.ynov.shared.Connection;
-import org.ynov.shared.Instruction;
-import org.ynov.shared.InstructionEnum;
+import org.ynov.shared.*;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -51,9 +48,26 @@ public class MissionControl implements KeyListener {
         }
         connection.out.println(Instruction.Encode(currentInstructions));
         isPromptingUser = false;
+        ListenForReply();
     }
 
+    private void ListenForReply(){
+        try {
+            String data;
+            while ((data = connection.in.readLine()) != null) {
+                System.out.println(data);
+                Information info = Information.Decode(data);
+                UpdateMap(info);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private void UpdateMap(Information info){
+        //TODO: Update map
+        PromptUser();
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
