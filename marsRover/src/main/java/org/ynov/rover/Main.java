@@ -17,7 +17,7 @@ public class Main {
         Planet planet = new Planet("Mars", 10, 5); // nom, taille, nombre d'obstacles
 
         // Création du rover sur la planète
-        Rover rover = new Rover(planet, OrientationEnum.North);
+        Rover rover = new Rover(OrientationEnum.North);
         rover.move(instruction.instruction);
 
        System.out.println("Nouvelle position : " + rover.getPosition().x + ", " + rover.getPosition().y);
