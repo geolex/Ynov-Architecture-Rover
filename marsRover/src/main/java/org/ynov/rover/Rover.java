@@ -16,16 +16,15 @@ public class Rover extends Element implements IInstructable {
     private Vector2 position;
     @Getter
     private OrientationEnum orientation;
-    private Planet planet;
 
-    public Rover(Planet planet, OrientationEnum orientation) {
+    public Rover(OrientationEnum orientation) {
         super(TypeElement.ROVER);
         this.position = new Vector2(0, 0);
         this.orientation = orientation;
-        this.planet = planet;
     }
 
     public boolean move(InstructionEnum instruction) {
+        Planet planet = Planet.getPlanet();
         int x = position.x;
         int y = position.y;
         int size = planet.getSize();
@@ -33,34 +32,18 @@ public class Rover extends Element implements IInstructable {
         switch (instruction) {
             case Forward:
                 switch (orientation) {
-                    case North:
-                        y++;
-                        break;
-                    case South:
-                        y--;
-                        break;
-                    case East:
-                        x++;
-                        break;
-                    case West:
-                        x--;
-                        break;
+                    case North: y++; break;
+                    case South: y--; break;
+                    case East:  x++; break;
+                    case West:  x--; break;
                 }
                 break;
             case Backward:
                 switch (orientation) {
-                    case North:
-                        y--;
-                        break;
-                    case South:
-                        y++;
-                        break;
-                    case East:
-                        x--;
-                        break;
-                    case West:
-                        x++;
-                        break;
+                    case North: y--; break;
+                    case South: y++; break;
+                    case East:  x--; break;
+                    case West:  x++; break;
                 }
                 break;
             case TurnLeft:
@@ -74,8 +57,7 @@ public class Rover extends Element implements IInstructable {
         x = (x + size) % size;
         y = (y + size) % size;
 
-        // Vérifie si la nouvelle position est valide et sans obstacle
-        if (isValidPosition(x, y)) {
+        if (isValidPosition(x, y, planet)) {
             position.x = x;
             position.y = y;
             return true;
@@ -83,7 +65,7 @@ public class Rover extends Element implements IInstructable {
         return false;
     }
 
-    private boolean isValidPosition(int x, int y) {
+    private boolean isValidPosition(int x, int y, Planet planet) {
         if (x < 0 || x >= planet.getSize() || y < 0 || y >= planet.getSize()) return false;
         for (Obstacle obs : planet.getObstacles()) {
             if (obs.getPosition().x == x && obs.getPosition().y == y) return false;
@@ -93,37 +75,32 @@ public class Rover extends Element implements IInstructable {
 
     private OrientationEnum turnLeft(OrientationEnum ori) {
         switch (ori) {
-            case North:
-                return OrientationEnum.West;
-            case West:
-                return OrientationEnum.South;
-            case South:
-                return OrientationEnum.East;
-            case East:
-                return OrientationEnum.North;
+            case North: return OrientationEnum.West;
+            case West:  return OrientationEnum.South;
+            case South: return OrientationEnum.East;
+            case East:  return OrientationEnum.North;
         }
         return ori;
     }
 
     private OrientationEnum turnRight(OrientationEnum ori) {
         switch (ori) {
-            case North:
-                return OrientationEnum.East;
-            case East:
-                return OrientationEnum.South;
-            case South:
-                return OrientationEnum.West;
-            case West:
-                return OrientationEnum.North;
+            case North: return OrientationEnum.East;
+            case East:  return OrientationEnum.South;
+            case South: return OrientationEnum.West;
+            case West:  return OrientationEnum.North;
         }
         return ori;
     }
 
+
+
     @Override
     public Information ProcessInstruction(Vector<Instruction> instruction) {
+        boolean success = true;
         for (Instruction instr : instruction) {
-            move(instr.instruction);
+            boolean moveResult = move(instr.instruction);
+            if (!moveResult) success = false;
         }
-        return new Information(position, true, orientation);
-    }
+        return new Information(position, success, orientation);    }
 }
