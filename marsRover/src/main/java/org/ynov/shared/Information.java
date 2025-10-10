@@ -20,12 +20,7 @@ public class Information {
 
         Vector2 position = Vector2.fromString(results[0]);
         Boolean success = Boolean.parseBoolean(results[1]);
-        Integer orientationIndex = IntParser.TryIntParse(results[2]);
 
-        if (orientationIndex == null || orientationIndex < 0 || orientationIndex > OrientationEnum.values().length
-                || position == null || success == null)
-        {return null;}
-
-        return new Information(position, success, OrientationEnum.values()[orientationIndex]);
+        return new Information(position, success, OrientationEnum.valueOf(results[2]));
     }
 }

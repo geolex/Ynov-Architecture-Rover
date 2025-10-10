@@ -20,17 +20,13 @@ public class Instruction {
     public static String Encode(Vector<Instruction> instructions){
         String result = "";
         for(int i = 0; i < instructions.size(); i++){
-            result += EncodeOne(instructions.get(i)) + ((i < instructions.size()-1)? "," : "");
+            result += EncodeOne(instructions.get(i)) + ((i < instructions.size()-1)? "-" : "");
         }
         return result;
     }
 
     private static Instruction DecodeOne(String data){
-        Integer value = IntParser.TryIntParse(data);
-
-        if(value == null || value < 0 || value > InstructionEnum.values().length){return null;}
-
-        InstructionEnum instruction = InstructionEnum.values()[value];
+        InstructionEnum instruction = InstructionEnum.valueOf(data);
         return new Instruction(instruction);
     };
 
