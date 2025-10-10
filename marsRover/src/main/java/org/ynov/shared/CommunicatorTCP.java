@@ -10,16 +10,20 @@ public class CommunicatorTCP implements ICommunicator {
     private int port = 9090;
 
     public Connection OpenCommunication() {
-        ServerSocket serverSocket = new ServerSocket(port);
-        System.out.println("Server is running and waiting for client connection...");
+        try {
+            ServerSocket serverSocket = new ServerSocket(port);
+            System.out.println("Server is running and waiting for client connection...");
 
-        Socket clientSocket = serverSocket.accept();
-        System.out.println("Client connected!");
+            Socket clientSocket = serverSocket.accept();
+            System.out.println("Client connected!");
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-        return new Connection(in, out);
+            return new Connection(in, out);
+        }catch (Exception e){
+            return null;
+        }
     }
 
     @Override
