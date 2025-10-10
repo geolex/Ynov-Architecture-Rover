@@ -4,7 +4,7 @@ public class CommunicationManager {
     private static CommunicationManager instance;
     public final ICommunicator communicator;
 
-    private CommunicationManager(ICommunicator communicator){
+    private CommunicationManager(){
         this.communicator = new CommunicatorTCP();
     }
 
@@ -12,5 +12,6 @@ public class CommunicationManager {
         if(instance == null){
             instance = new CommunicationManager();
         }
+        return instance;
     }
 }
