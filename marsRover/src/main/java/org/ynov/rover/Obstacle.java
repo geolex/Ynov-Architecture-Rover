@@ -2,11 +2,16 @@ package org.ynov.rover;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.ynov.shared.Vector2;
 
 @Getter
 @Setter
 public class Obstacle extends Element{
     public Obstacle(){
+        super(TypeElement.OBSTACLE);
+    }
+
+    public Obstacle(Vector2 position) {
         super(TypeElement.OBSTACLE);
     }
 
