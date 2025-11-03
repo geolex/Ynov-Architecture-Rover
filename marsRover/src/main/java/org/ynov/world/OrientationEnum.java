@@ -1,4 +1,4 @@
-package org.ynov.shared;
+package org.ynov.world;
 
 public enum OrientationEnum {
     North,

@@ -1,6 +1,7 @@
 package org.ynov.shared;
 
 import org.junit.jupiter.api.Test;
+import org.ynov.world.Vector2;
 
 import static org.junit.jupiter.api.Assertions.*;
 

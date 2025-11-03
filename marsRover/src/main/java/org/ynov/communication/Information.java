@@ -1,4 +1,7 @@
-package org.ynov.shared;
+package org.ynov.communication;
+
+import org.ynov.world.OrientationEnum;
+import org.ynov.world.Vector2;
 
 public class Information {
     public final Vector2 position;

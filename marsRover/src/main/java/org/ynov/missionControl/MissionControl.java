@@ -1,6 +1,6 @@
 package org.ynov.missionControl;
 
-import org.ynov.shared.*;
+import org.ynov.communication.*;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -14,11 +14,9 @@ public class MissionControl implements KeyListener {
     Vector<Instruction> currentInstructions = new Vector<Instruction>();
     Connection connection;
 
-    public void Initialize(){
+    public MissionControl(ICommunicator communicator) {
         System.out.println("Welcome to Kerbal's Mars Rover Program");
-
-        connection = CommunicationManager.Instance().communicator.HostCommunication();
-
+        this.connection = communicator.HostCommunication();
         PromptUser();
     }
 

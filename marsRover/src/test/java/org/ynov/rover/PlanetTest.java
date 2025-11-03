@@ -1,6 +1,8 @@
 package org.ynov.rover;
 
 import org.junit.jupiter.api.Test;
+import org.ynov.world.Planet;
+import org.ynov.world.TypeElement;
 
 class PlanetTest {
 

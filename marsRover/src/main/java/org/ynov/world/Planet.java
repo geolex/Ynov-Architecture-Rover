@@ -1,7 +1,7 @@
-package org.ynov.rover;
+package org.ynov.world;
 
 import lombok.Getter;
-import org.ynov.shared.Vector2;
+import org.ynov.rover.Rover;
 
 import java.util.ArrayList;
 import java.util.List;

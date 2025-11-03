@@ -1,6 +1,6 @@
 package org.ynov.rover;
-import org.ynov.shared.Information;
-import  org.ynov.shared.Instruction;
+import org.ynov.communication.Information;
+import org.ynov.communication.Instruction;
 
 import java.util.Vector;
 
