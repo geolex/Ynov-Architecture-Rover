@@ -2,7 +2,7 @@ package org.ynov.world;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.ynov.shared.Vector2;
+import org.ynov.world.Vector2;
 
 @Getter
 @Setter
