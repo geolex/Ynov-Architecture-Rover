@@ -1,2 +1,2 @@
-/marsRover/.idea
-/marsRover/target
+/marsRover/.idea/**
+/marsRover/target/**
