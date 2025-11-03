@@ -50,6 +50,14 @@ public class Planet {
         }
     }
 
+    public void addObstacle(Obstacle obstacle) {
+        if (!obstacleAlreadyExists(obstacle.getPosition().x, obstacle.getPosition().y)) {
+            elements.add(obstacle);
+        }else {
+            System.out.println(obstacle.getPosition().x + " " + obstacle.getPosition().y + " ne peut etre ajoute.");
+        }
+    }
+
     private void createObstacle() {
         elements = new ArrayList<>();
         for (int i = 0; i < numberElements; i++) {
