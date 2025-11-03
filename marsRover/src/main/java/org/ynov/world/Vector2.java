@@ -1,6 +1,7 @@
-package org.ynov.shared;
+package org.ynov.world;
 
 import lombok.NoArgsConstructor;
+import org.ynov.communication.IntParser;
 
 @NoArgsConstructor
 public class Vector2 {

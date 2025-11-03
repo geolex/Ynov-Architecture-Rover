@@ -1,8 +1,8 @@
 package org.ynov.missionControl;
 
 import lombok.Getter;
-import org.ynov.rover.Obstacle;
-import org.ynov.rover.Planet;
+import org.ynov.world.Obstacle;
+import org.ynov.world.Planet;
 import org.ynov.rover.Rover;
 
 import java.util.Arrays;

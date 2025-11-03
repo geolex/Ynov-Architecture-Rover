@@ -2,10 +2,8 @@ package org.ynov.rover;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.ynov.shared.OrientationEnum;
-import org.ynov.shared.Vector2;
-
-import java.util.List;
+import org.ynov.world.Planet;
+import org.ynov.world.TypeElement;
 
 class PlanetTest {
 

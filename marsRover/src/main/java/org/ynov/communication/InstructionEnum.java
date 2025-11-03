@@ -1,4 +1,4 @@
-package org.ynov.shared;
+package org.ynov.communication;
 
 public enum InstructionEnum {
     Forward,

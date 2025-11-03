@@ -2,7 +2,9 @@
 package org.ynov.rover;
 
 import lombok.Getter;
-import org.ynov.shared.*;
+import org.ynov.communication.*;
+import org.ynov.world.*;
+
 import java.io.IOException;
 import java.util.Vector;
 
@@ -14,11 +16,11 @@ public class Rover extends Element implements IInstructable {
     private OrientationEnum orientation;
     private Connection connection;
 
-    public Rover(OrientationEnum orientation) {
+    public Rover(OrientationEnum orientation, ICommunicator communicator) {
         super(TypeElement.ROVER);
         this.position = new Vector2(0, 0);
         this.orientation = orientation;
-        this.connection = CommunicationManager.Instance().communicator.ConnectToCommunication();
+        this.connection = communicator.ConnectToCommunication();
     }
 
     public boolean move(InstructionEnum instruction) {

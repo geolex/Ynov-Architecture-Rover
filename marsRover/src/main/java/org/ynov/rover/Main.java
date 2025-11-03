@@ -1,7 +1,8 @@
 package org.ynov.rover;
 
-import org.ynov.missionControl.Map;
-import org.ynov.shared.OrientationEnum;
+import org.ynov.communication.CommunicatorTCP;
+import org.ynov.world.OrientationEnum;
+import org.ynov.world.Planet;
 
 
 public class Main {
@@ -10,7 +11,7 @@ public class Main {
         // Création de la planète
         int taille = 10;
         Planet planet = new Planet("Mars", 10, 5);
-        Rover rover = new Rover(OrientationEnum.North);
+        Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP());
         planet.addRover(rover);
 
         // Affichage de l'état initial

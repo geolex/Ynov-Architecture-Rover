@@ -1,4 +1,4 @@
-package org.ynov.shared;
+package org.ynov.communication;
 
 import java.io.BufferedReader;
 import java.io.IOException;

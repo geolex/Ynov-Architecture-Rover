@@ -1,6 +1,7 @@
 package org.ynov.shared;
 
 import org.junit.jupiter.api.Test;
+import org.ynov.communication.IntParser;
 
 class IntParserTest {
 
