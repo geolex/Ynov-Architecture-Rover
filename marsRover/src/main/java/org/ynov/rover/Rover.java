@@ -8,8 +8,7 @@ import org.ynov.world.*;
 import java.io.IOException;
 import java.util.Vector;
 
-public class Rover extends Element implements IInstructable {
-
+public class Rover extends Element {
     @Getter
     private Vector2 position;
     @Getter
