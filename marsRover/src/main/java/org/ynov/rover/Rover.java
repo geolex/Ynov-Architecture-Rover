@@ -14,19 +14,19 @@ public class Rover extends Element {
     @Getter
     private OrientationEnum orientation;
     private Connection connection;
+    private final Planet planet;
 
-    public Rover(OrientationEnum orientation, ICommunicator communicator) {
+    public Rover(OrientationEnum orientation, ICommunicator communicator, Planet planet) {
         super(TypeElement.ROVER);
         this.position = new Vector2(0, 0);
         this.orientation = orientation;
         this.connection = communicator.ConnectToCommunication();
+        this.planet = planet;
     }
 
     public boolean move(InstructionEnum instruction) {
-        Planet planet = Planet.getPlanet();
         int x = position.x;
         int y = position.y;
-        int size = planet.getSize();
 
         switch (instruction) {
             case Forward:
@@ -53,10 +53,10 @@ public class Rover extends Element {
                 return true;
         }
 
-        x = (x + size) % size;
-        y = (y + size) % size;
+        x = (x + planet.getWidth()) % planet.getWidth();
+        y = (y + planet.getHeight()) % planet.getHeight();
 
-        if (isValidPosition(x, y, planet)) {
+        if (isValidPosition(x, y)) {
             position.x = x;
             position.y = y;
             return true;
@@ -64,12 +64,9 @@ public class Rover extends Element {
         return false;
     }
 
-    private boolean isValidPosition(int x, int y, Planet planet) {
-        if (x < 0 || x >= planet.getSize() || y < 0 || y >= planet.getSize()) return false;
-        for (Obstacle obs : planet.getObstacles()) {
-            if (obs.getPosition().x == x && obs.getPosition().y == y) return false;
-        }
-        return true;
+    private boolean isValidPosition(int x, int y) {
+        if (x < 0 || x >= planet.getWidth() || y < 0 || y >= planet.getHeight()) return false;
+        return planet.GetElement(new Vector2(x, y)) == null;
     }
 
     private OrientationEnum turnLeft(OrientationEnum ori) {
@@ -115,9 +112,6 @@ public class Rover extends Element {
         }
     }
 
-
-
-    @Override
     public Information ProcessInstruction(Vector<Instruction> instruction) {
         boolean success = true;
         for (Instruction instr : instruction) {

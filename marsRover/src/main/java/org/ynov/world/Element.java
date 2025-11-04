@@ -9,8 +9,12 @@ public class Element {
     private Vector2 position;
     private TypeElement type;
 
-    public Element(TypeElement typeElement) {
+    public Element(TypeElement type){
+        this(type, Vector2.zero);
+    }
+
+    public Element(TypeElement typeElement, Vector2 position) {
         this.type = typeElement;
-        this.position = new Vector2();
+        this.position = position;
     }
 }

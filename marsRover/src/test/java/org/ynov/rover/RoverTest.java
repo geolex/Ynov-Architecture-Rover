@@ -2,16 +2,14 @@ package org.ynov.rover;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.ynov.shared.Information;
-import org.ynov.shared.Instruction;
-import org.ynov.shared.InstructionEnum;
-import org.ynov.shared.OrientationEnum;
+import org.ynov.communication.Information;
+import org.ynov.communication.Instruction;
+import org.ynov.communication.InstructionEnum;
+import org.ynov.world.OrientationEnum;
 
 import java.util.Vector;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.ynov.shared.InstructionEnum.Forward;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RoverTest {
 
@@ -21,7 +19,7 @@ public class RoverTest {
         void move() {
             //GIVEN
             Rover rover = new Rover(OrientationEnum.North);
-            InstructionEnum instructionEnum = Forward;
+            InstructionEnum instructionEnum = InstructionEnum.Forward;
 
             //WHEN
             boolean success = rover.move(instructionEnum);

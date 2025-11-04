@@ -2,8 +2,9 @@ package org.ynov.rover;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.ynov.world.Planet;
-import org.ynov.world.TypeElement;
+import org.ynov.world.*;
+
+import java.util.List;
 
 class PlanetTest {
 
@@ -74,7 +75,7 @@ class PlanetTest {
             Planet planet = new Planet("Mars", 100, 20);
 
             // WHEN
-            Rover result = planet.getRover();
+            Rover result = planet.findRover();
 
             // THEN
             assert result == null;
@@ -88,7 +89,7 @@ class PlanetTest {
             planet.addRover(rover);
 
             // WHEN
-            Rover result = planet.getRover();
+            Rover result = planet.findRover();
 
             // THEN
             assert result == rover;
@@ -98,12 +99,12 @@ class PlanetTest {
         public void ignoresNonRoverElements() {
             // GIVEN
             Planet planet = new Planet("Mars", 100, 20);
-            Obstacle obstacle = new Obstacle();
+            Element obstacle = new Element(TypeElement.OBSTACLE);
             obstacle.setPosition(new Vector2(5, 5));
             planet.getElements().add(obstacle);
 
             // WHEN
-            Rover result = planet.getRover();
+            Rover result = planet.findRover();
 
             // THEN
             assert result == null;
@@ -119,7 +120,7 @@ class PlanetTest {
             Planet planet = new Planet("Mars", 100, 0);
 
             // WHEN
-            List<Obstacle> result = planet.getObstacles();
+            List<Element> result = planet.getObstacles();
 
             // THEN
             assert result.isEmpty();
@@ -129,14 +130,14 @@ class PlanetTest {
         public void returnsOnlyObstacles() {
             // GIVEN
             Planet planet = new Planet("Mars", 100, 0);
-            Obstacle obstacle = new Obstacle();
+            Element obstacle = new Element(TypeElement.OBSTACLE);
             obstacle.setPosition(new Vector2(3, 3));
             Rover rover = new Rover(OrientationEnum.North);
             planet.getElements().add(obstacle);
             planet.getElements().add(rover);
 
             // WHEN
-            List<Obstacle> result = planet.getObstacles();
+            List<Element> result = planet.getObstacles();
 
             // THEN
             assert result.size() == 1;
@@ -147,15 +148,15 @@ class PlanetTest {
         public void returnsAllObstaclesPresent() {
             // GIVEN
             Planet planet = new Planet("Mars", 100, 0);
-            Obstacle obstacle1 = new Obstacle();
+            Element obstacle1 = new Element(TypeElement.OBSTACLE);
             obstacle1.setPosition(new Vector2(1, 1));
-            Obstacle obstacle2 = new Obstacle();
+            Element obstacle2 = new Element(TypeElement.OBSTACLE);
             obstacle2.setPosition(new Vector2(2, 2));
             planet.getElements().add(obstacle1);
             planet.getElements().add(obstacle2);
 
             // WHEN
-            List<Obstacle> result = planet.getObstacles();
+            List<Element> result = planet.getObstacles();
 
             // THEN
             assert result.size() == 2;
@@ -179,14 +180,14 @@ class PlanetTest {
             planet.addRover(rover);
 
             // THEN
-            assert planet.getRover() == rover;
+            assert planet.findRover() == rover;
         }
 
         @Test
         public void doesNotAddRoverIfObstacleExists() {
             // GIVEN
             Planet planet = new Planet("Mars", 100, 0);
-            Obstacle obstacle = new Obstacle();
+            Element obstacle = new Element(TypeElement.OBSTACLE);
             obstacle.getPosition().x = 5;
             obstacle.getPosition().y = 5;
             planet.addObstacle(obstacle);
@@ -199,7 +200,7 @@ class PlanetTest {
             planet.addRover(rover);
 
             // THEN
-            assert planet.getRover() == null;
+            assert planet.findRover() == null;
         }
     }
 }
