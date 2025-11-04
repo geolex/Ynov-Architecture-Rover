@@ -1,6 +1,8 @@
 package org.ynov.missionControl;
 
 import org.ynov.communication.*;
+import org.ynov.world.Planet;
+import org.ynov.world.TypeElement;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -9,14 +11,17 @@ import java.util.Vector;
 
 public class MissionControl implements KeyListener {
 
-    int[][] map;
+    Map map;
     static boolean isPromptingUser = false;
     Vector<Instruction> currentInstructions = new Vector<Instruction>();
     Connection connection;
 
+
+
     public MissionControl(ICommunicator communicator) {
         System.out.println("Welcome to Kerbal's Mars Rover Program");
         this.connection = communicator.HostCommunication();
+        map = new Map(Planet.getPlanet().getWidth(),  Planet.getPlanet().getHeight());
         PromptUser();
     }
 
@@ -64,7 +69,12 @@ public class MissionControl implements KeyListener {
     }
 
     private void UpdateMap(Information info){
-        //TODO: Update map
+        if(info.success)
+            map.setCell(info.position, TypeElement.EMPTY);
+        else{
+
+        }
+        map.printMapAscii();
         PromptUser();
     }
 

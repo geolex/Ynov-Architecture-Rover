@@ -27,7 +27,7 @@ public class Planet {
 
     public static Planet getPlanet() {
         if (planet == null) {
-            planet = new Planet("Mars", 100, 20);
+            planet = new Planet("Mars", 4, 3);
         }
         return planet;
     }

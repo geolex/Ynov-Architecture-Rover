@@ -1,8 +1,7 @@
 package org.ynov.world;
 
 public enum TypeElement {
-    UNKNOW,
+    EMPTY,
     OBSTACLE,
     ROVER,
-    WALL
 }
