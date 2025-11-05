@@ -1,6 +1,6 @@
 package org.ynov.missionControl;
 
-import org.ynov.communication.CommunicatorTCP;
+import org.ynov.tcp.CommunicatorTCP;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.

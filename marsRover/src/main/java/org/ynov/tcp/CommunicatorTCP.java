@@ -1,4 +1,7 @@
-package org.ynov.communication;
+package org.ynov.tcp;
+
+import org.ynov.communication.Connection;
+import org.ynov.communication.ICommunicator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
