@@ -1,4 +1,4 @@
-// src/main/java/org/ynov/rover/Rover.java
+// java
 package org.ynov.rover;
 
 import lombok.Getter;
@@ -22,6 +22,20 @@ public class Rover extends Element {
         this.orientation = orientation;
         this.connection = communicator.ConnectToCommunication();
         this.planet = planet;
+
+        // Envoi du handshake initial (position + orientation) immédiatement après connexion
+        if (this.connection != null && this.connection.out != null) {
+            try {
+                Information initialInfo = new Information(position, true, orientation);
+                this.connection.out.println(Information.Encode(initialInfo));
+                this.connection.out.flush();
+                System.out.println("Handshake initial envoyé au Mission Control");
+            } catch (Exception e) {
+                System.err.println("Impossible d'envoyer le handshake initial: " + e.getMessage());
+            }
+        } else {
+            System.err.println("Flux de sortie indisponible : handshake initial non envoyé.");
+        }
     }
 
     public boolean move(InstructionEnum instruction) {
@@ -31,16 +45,18 @@ public class Rover extends Element {
         switch (instruction) {
             case Forward:
                 switch (orientation) {
-                    case North: y++; break;
-                    case South: y--; break;
+                    // Nord -> remonter dans la console : y--
+                    case North: y--; break;
+                    case South: y++; break;
                     case East:  x++; break;
                     case West:  x--; break;
                 }
                 break;
             case Backward:
+                // backward = inverse de forward
                 switch (orientation) {
-                    case North: y--; break;
-                    case South: y++; break;
+                    case North: y++; break;
+                    case South: y--; break;
                     case East:  x--; break;
                     case West:  x++; break;
                 }
@@ -90,11 +106,19 @@ public class Rover extends Element {
     }
 
     public void listenAndExecute() {
+        if (connection == null) {
+            System.err.println("Connection non établie : impossible d'écouter ou d'envoyer la position initiale.");
+            return;
+        }
+        if (connection.out == null || connection.in == null) {
+            System.err.println("Flux de communication manquant (in/out).");
+            return;
+        }
+
         try {
             while (true) {
                 String last = connection.in.readLine();
                 if (last == null) break;
-
 
                 while (connection.in.ready()) {
                     String next = connection.in.readLine();
@@ -118,6 +142,7 @@ public class Rover extends Element {
             boolean moveResult = move(instr.instruction);
             if (!moveResult) success = false;
         }
-        return new Information(position, success, orientation);    }
+        return new Information(position, success, orientation);
+    }
 
 }

@@ -1,6 +1,6 @@
 package org.ynov.rover;
 
-import org.ynov.communication.CommunicatorTCP;
+import org.ynov.tcp.CommunicatorTCP;
 import org.ynov.world.OrientationEnum;
 import org.ynov.world.Planet;
 
