@@ -1,29 +1,46 @@
 package org.ynov.communication;
 
-import org.ynov.world.OrientationEnum;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.ynov.world.Vector2;
+import org.ynov.world.OrientationEnum;
+
+import java.util.List;
 
 public class Information {
-    public final Vector2 position;
-    public final boolean success;
-    public final OrientationEnum orientation;
+    public Vector2 position;
+    public boolean success;
+    public OrientationEnum orientation;
+    public List<Vector2> detectedObstacles; // positions d'obstacles découverts par le rover (nullable)
+
+    public Information() {}
 
     public Information(Vector2 position, boolean success, OrientationEnum orientation) {
+        this(position, success, orientation, null);
+    }
+
+    public Information(Vector2 position, boolean success, OrientationEnum orientation, List<Vector2> detectedObstacles) {
         this.position = position;
         this.success = success;
         this.orientation = orientation;
+        this.detectedObstacles = detectedObstacles;
     }
 
-    public static String Encode(Information information){
-      return "" + information.position + "-" +  information.success + "-" + information.orientation;
-    };
+    private static final ObjectMapper mapper = new ObjectMapper();
 
-    public static Information Decode(String data){
-        String[] results = data.split("-");
+    public static String Encode(Information info) {
+        try {
+            return mapper.writeValueAsString(info);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        Vector2 position = Vector2.fromString(results[0]);
-        Boolean success = Boolean.parseBoolean(results[1]);
-
-        return new Information(position, success, OrientationEnum.valueOf(results[2]));
+    public static Information Decode(String data) {
+        try {
+            return mapper.readValue(data, Information.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

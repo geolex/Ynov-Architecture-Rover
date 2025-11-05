@@ -1,4 +1,4 @@
-// src/main/java/org/ynov/rover/Rover.java
+// java
 package org.ynov.rover;
 
 import lombok.Getter;
@@ -22,6 +22,20 @@ public class Rover extends Element {
         this.orientation = orientation;
         this.connection = communicator.ConnectToCommunication();
         this.planet = planet;
+
+        // Envoi du handshake initial (position + orientation) immédiatement après connexion
+        if (this.connection != null && this.connection.out != null) {
+            try {
+                Information initialInfo = new Information(position, true, orientation);
+                this.connection.out.println(Information.Encode(initialInfo));
+                this.connection.out.flush();
+                System.out.println("Handshake initial envoyé au Mission Control");
+            } catch (Exception e) {
+                System.err.println("Impossible d'envoyer le handshake initial: " + e.getMessage());
+            }
+        } else {
+            System.err.println("Flux de sortie indisponible : handshake initial non envoyé.");
+        }
     }
 
     public boolean move(InstructionEnum instruction) {
@@ -90,12 +104,22 @@ public class Rover extends Element {
     }
 
     public void listenAndExecute() {
+        if (connection == null) {
+            System.err.println("Connection non établie : impossible d'écouter ou d'envoyer la position initiale.");
+            return;
+        }
+        if (connection.out == null || connection.in == null) {
+            System.err.println("Flux de communication manquant (in/out).");
+            return;
+        }
+
         try {
+            // L'envoi initial a déjà été fait dans le constructeur ; boucle normale de traitement
             while (true) {
                 String last = connection.in.readLine();
                 if (last == null) break;
 
-
+                // vider le buffer si plusieurs lignes arrivent rapidement (garde la dernière lue)
                 while (connection.in.ready()) {
                     String next = connection.in.readLine();
                     if (next == null) break;
@@ -118,6 +142,7 @@ public class Rover extends Element {
             boolean moveResult = move(instr.instruction);
             if (!moveResult) success = false;
         }
-        return new Information(position, success, orientation);    }
+        return new Information(position, success, orientation);
+    }
 
 }

@@ -1,8 +1,10 @@
+// java
 package org.ynov.missionControl;
 
 import org.ynov.communication.*;
 import org.ynov.world.Planet;
 import org.ynov.world.TypeElement;
+import org.ynov.world.Vector2;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -15,6 +17,7 @@ public class MissionControl implements KeyListener {
     static boolean isPromptingUser = false;
     Vector<Instruction> currentInstructions = new Vector<Instruction>();
     Connection connection;
+    private Vector2 lastRoverPos = null;
 
 
 
@@ -22,6 +25,21 @@ public class MissionControl implements KeyListener {
         System.out.println("Welcome to Kerbal's Mars Rover Program");
         this.connection = communicator.HostCommunication();
         map = new Map(Planet.getPlanet().getWidth(),  Planet.getPlanet().getHeight());
+
+        // Lecture du handshake initial envoyé par le rover (position + orientation)
+        try {
+            String init = connection.in.readLine();
+            if (init != null && !init.isBlank()) {
+                Information info = Information.Decode(init);
+                // afficher la position et l'orientation reçues
+                System.out.println("Position initiale du rover : (" + info.position.x + "," + info.position.y + ")");
+                System.out.println("Orientation initiale : " + info.orientation);
+                UpdateMap(info);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         PromptUser();
     }
 
@@ -69,11 +87,18 @@ public class MissionControl implements KeyListener {
     }
 
     private void UpdateMap(Information info){
-        if(info.success)
-            map.setCell(info.position, TypeElement.EMPTY);
-        else{
-
+        // effacer ancienne position du rover
+        if (lastRoverPos != null) {
+            map.setCell(lastRoverPos, TypeElement.EMPTY);
         }
+
+        // placer le rover à la nouvelle position
+        map.setCell(info.position, TypeElement.ROVER);
+        lastRoverPos = info.position;
+
+        // afficher infos en console
+        System.out.println("Rover -> position: (" + info.position.x + "," + info.position.y + "), orientation: " + info.orientation + ", success: " + info.success);
+
         map.printMapAscii();
         PromptUser();
     }
@@ -87,9 +112,9 @@ public class MissionControl implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if(!isPromptingUser) return;
         if(e.getKeyCode() == KeyEvent.VK_ENTER){
-           connection.out.println(Instruction.Encode(currentInstructions));
-           System.out.println(connection.out.toString());
-           isPromptingUser = false;
+            connection.out.println(Instruction.Encode(currentInstructions));
+            System.out.println(connection.out.toString());
+            isPromptingUser = false;
         }
 
         InstructionEnum instEnum = switch (e.getKeyCode()) {
