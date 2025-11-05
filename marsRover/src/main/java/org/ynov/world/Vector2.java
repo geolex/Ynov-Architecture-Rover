@@ -8,7 +8,11 @@ import java.util.Random;
 
 @NoArgsConstructor
 public class Vector2 {
-    public static Vector2 zero = new Vector2(0, 0);
+    public static final Vector2 ZERO = new Vector2(0, 0);
+    public static final Vector2 NORTH = new Vector2(0, 1);
+    public static final Vector2 WEST = new Vector2(1, 0);
+    public static final Vector2 SOUTH = new Vector2(0, -1);
+    public static final Vector2 EAST = new Vector2(-1, 0);
 
     public int x;
     public int y;
@@ -39,5 +43,11 @@ public class Vector2 {
         int x = rand.nextInt(minX, maxX);
         int y = rand.nextInt(minY, maxY);
         return new Vector2(x, y);
+    }
+
+    public Vector2 add(Vector2 vector){
+        this.x += vector.x;
+        this.y += vector.y;
+        return this;
     }
 }
