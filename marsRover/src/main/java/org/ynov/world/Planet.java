@@ -14,7 +14,6 @@ public class Planet {
     private int width;
     private int height;
     private Element[][] elements;
-    //private List<Element> elements;
 
     public Planet(String name, int size, int numberElements) {
         this.name = name;
@@ -27,7 +26,7 @@ public class Planet {
 
     public static Planet getPlanet() {
         if (planet == null) {
-            planet = new Planet("Mars", 4, 3);
+            planet = new Planet("Mars", 5, 3);
         }
         return planet;
     }
@@ -36,6 +35,7 @@ public class Planet {
         List<Element> results = new ArrayList<>();
         for(Element[] column : elements){
             for(Element element : column) {
+                if(element == null) continue;
                 if (element.getType() == typeElement) {
                     results.add(element);
                 }
@@ -58,7 +58,10 @@ public class Planet {
     }
 
     public void addRover(Rover rover) {
-        elements[rover.getPosition().x][rover.getPosition().y] = new Element(TypeElement.ROVER, rover.getPosition());
+        if(!(rover.getPosition().x < 0 || rover.getPosition().x > width) || !(rover.getPosition().y < 0 || rover.getPosition().y >= height))
+            elements[rover.getPosition().x][rover.getPosition().y] = new Element(TypeElement.ROVER, rover.getPosition());
+        else
+            System.out.println("The Rover coordinates can't be higher than the planet");
     }
 
     public void addObstacle(Element obstacle) {
@@ -97,6 +100,7 @@ public class Planet {
         List<Element> obstacles = new ArrayList<>();
         for(Element[] column : elements){
             for(Element element : column) {
+                if(element == null) continue;
                 if (element.getType() == TypeElement.OBSTACLE) {
                     obstacles.add(element);
                 }
