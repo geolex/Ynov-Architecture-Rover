@@ -10,8 +10,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.Vector;
+import java.io.*;
+
+
 
 public class MissionControl implements KeyListener {
+    private static final java.io.BufferedReader CONSOLE_READER = new java.io.BufferedReader(new java.io.InputStreamReader(System.in));
 
     Map map;
     static boolean isPromptingUser = false;
@@ -40,11 +44,66 @@ public class MissionControl implements KeyListener {
 
         PromptUser();
     }
-
+/*
     private void PromptUser(){
         System.out.println("What are your instructions?");
         isPromptingUser = true;
         ReadString();
+    }*/
+
+    private void PromptUser(){
+        System.out.println("What are your instructions?");
+        System.out.print("> ");
+        isPromptingUser = true;
+
+        String line;
+        try {
+            line = CONSOLE_READER.readLine();
+        } catch (IOException e) {
+            System.err.println("Erreur lecture console: " + e.getMessage());
+            isPromptingUser = false;
+            return;
+        }
+
+        if (line == null) {
+            isPromptingUser = false;
+            return;
+        }
+
+        // Autoriser seulement z q s d (maj/min) et espaces
+        if (!line.matches("^[zqsdZQSD\\s]*$")) {
+            System.out.println("Commande refusée : seuls les caractères z, q, s, d sont autorisés.");
+            isPromptingUser = false;
+            return;
+        }
+        String filtered = line.replaceAll("\\s+", "").toLowerCase();
+
+        // Construire la liste d'instructions attendue par le rover
+        currentInstructions.clear();
+        for (char c : filtered.toCharArray()) {
+            switch (c) {
+                case 'z' -> currentInstructions.add(new Instruction(InstructionEnum.Forward));
+                case 's' -> currentInstructions.add(new Instruction(InstructionEnum.Backward));
+                case 'q' -> currentInstructions.add(new Instruction(InstructionEnum.TurnLeft));
+                case 'd' -> currentInstructions.add(new Instruction(InstructionEnum.TurnRight));
+                default -> {} // impossible grâce au filtre
+            }
+        }
+        if (connection != null && connection.out != null) {
+            try {
+                connection.out.println(Instruction.Encode(currentInstructions));
+                connection.out.flush();
+                System.out.println("Envoyé: " + Instruction.Encode(currentInstructions));
+                isPromptingUser = false;
+                ListenForReply();
+            } catch (Exception e) {
+                System.err.println("Erreur envoi: " + e.getMessage());
+                isPromptingUser = false;
+            }
+        } else {
+            System.err.println("Connexion indisponible pour envoyer les instructions.");
+            isPromptingUser = false;
+        }
     }
 
     private void ReadString(){
@@ -79,10 +138,16 @@ public class MissionControl implements KeyListener {
                 Information info = Information.Decode(data);
                 UpdateMap(info);
             }
+        } catch (java.net.SocketException se) {
+            System.err.println("Connexion perdue (socket reset) : " + se.getMessage());
+            // Ne rappeler pas PromptUser() si la connexion est morte
+            isPromptingUser = false;
+            return;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     private void UpdateMap(Information info) {
         // effacer ancienne position du rover
