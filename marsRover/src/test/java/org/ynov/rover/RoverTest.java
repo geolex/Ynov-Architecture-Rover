@@ -2,14 +2,20 @@ package org.ynov.rover;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.ynov.communication.Information;
-import org.ynov.communication.Instruction;
+import org.ynov.communication.Connection;
 import org.ynov.communication.InstructionEnum;
+import org.ynov.tcp.CommunicatorTCP;
 import org.ynov.world.OrientationEnum;
+import org.ynov.world.Planet;
 
-import java.util.Vector;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RoverTest {
 
@@ -18,58 +24,60 @@ public class RoverTest {
         @Test
         void move() {
             //GIVEN
-            Rover rover = new Rover(OrientationEnum.North);
-            InstructionEnum instructionEnum = InstructionEnum.Forward;
+            Planet planet = new Planet("Mars",5, 5);
+            Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet);
 
-            //WHEN
-            boolean success = rover.move(instructionEnum);
+            // WHEN
+            boolean moved = rover.move(InstructionEnum.Forward);
 
-            //THEN
-            assertTrue(success, "Rover should successfully move forward.");
+            // THEN
+            assertTrue(moved);
             assertEquals(0, rover.getPosition().x);
-            assertEquals(1, rover.getPosition().y);
+            assertEquals(4, rover.getPosition().y);
+            assertEquals(OrientationEnum.North, rover.getOrientation());
         }
-
         @Test
-        void moveBackward() {
+        void moveBackward () {
             //GIVEN
-            Rover rover = new Rover(OrientationEnum.South);
-            InstructionEnum instructionEnum = InstructionEnum.Backward;
+            Planet planet = new Planet("Mars", 5, 5);
+            Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet);
 
-            //WHEN
-            boolean success = rover.move(instructionEnum);
+            // WHEN
+            boolean moved = rover.move(InstructionEnum.Backward);
 
-            //THEN
-            assertTrue(success, "Rover should successfully move backward.");
+            // THEN
+            assertTrue(moved);
             assertEquals(0, rover.getPosition().x);
+            assertEquals(1, rover.getPosition().y); // Moved one step south (y increases)
+            assertEquals(OrientationEnum.North, rover.getOrientation());
         }
 
         @Test
         void turnLeft() {
             //GIVEN
-            Rover rover = new Rover(OrientationEnum.East);
-            InstructionEnum instructionEnum = InstructionEnum.TurnLeft;
+            Planet planet = new Planet("Mars", 5, 5);
+            Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet);
 
-            //WHEN
-            boolean success = rover.move(instructionEnum);
+            // WHEN
+            boolean turned = rover.move(InstructionEnum.TurnLeft);
 
-            //THEN
-            assertTrue(success, "Rover should successfully turn left.");
-            assertEquals(OrientationEnum.North, rover.getOrientation());
+            // THEN
+            assertTrue(turned);
+            assertEquals(OrientationEnum.West, rover.getOrientation());
         }
 
         @Test
         void turnRight() {
             //GIVEN
-            Rover rover = new Rover(OrientationEnum.West);
-            InstructionEnum instructionEnum = InstructionEnum.TurnRight;
+            Planet planet = new Planet("Mars", 5, 5);
+            Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet);
 
-            //WHEN
-            boolean success = rover.move(instructionEnum);
+            // WHEN
+            boolean turned = rover.move(InstructionEnum.TurnRight);
 
-            //THEN
-            assertTrue(success, "Rover should successfully turn right.");
-            assertEquals(OrientationEnum.North, rover.getOrientation());
+            // THEN
+            assertTrue(turned);
+            assertEquals(OrientationEnum.East, rover.getOrientation());
         }
     }
 
@@ -77,39 +85,55 @@ public class RoverTest {
     class ListenAndExecuteTest {
 
         @Test
-        void processInstruction_singleValidInstruction() {
+        void listenAndExecute_validInstructions() throws IOException {
             // GIVEN
-            Rover rover = new Rover(OrientationEnum.North);
-            Vector<Instruction> instructions = new Vector<>();
-            instructions.add(new Instruction(InstructionEnum.Forward));
+            Planet planet = new Planet("Mars", 5, 5);
+            CommunicatorTCP mockCommunicator = new CommunicatorTCP();
+//            mockConnection.in = new BufferedReader(new StringReader("F,B,L,R\n"));
+//            mockConnection.out = new PrintWriter(new StringWriter(), true);
+//            Connection mockConnection = new Connection();
+//            mockCommunicator.setMockConnection(mockConnection);
+            Rover rover = new Rover(OrientationEnum.North, mockCommunicator, planet);
 
             // WHEN
-            Information result = rover.ProcessInstruction(instructions);
+            rover.listenAndExecute();
 
             // THEN
-            assertTrue(result.success, "Single valid instruction should succeed.");
-            assertEquals(0, result.position.x);
-            assertEquals(1, result.position.y);
-            assertEquals(OrientationEnum.North, result.orientation);
+            assertEquals(0, rover.getPosition().x);
+            assertEquals(1, rover.getPosition().y);
+            assertEquals(OrientationEnum.North, rover.getOrientation());
         }
 
         @Test
-        void processInstruction_multipleInstructions() {
+        void listenAndExecute_missingConnection() {
             // GIVEN
-            Rover rover = new Rover(OrientationEnum.North);
-            Vector<Instruction> instructions = new Vector<>();
-            instructions.add(new Instruction(InstructionEnum.Forward));
-            instructions.add(new Instruction(InstructionEnum.TurnRight));
-            instructions.add(new Instruction(InstructionEnum.Forward));
+            Planet planet = new Planet("Mars", 5, 5);
+            CommunicatorTCP mockCommunicator = new CommunicatorTCP(); // No connection will be established
+            Rover rover = new Rover(OrientationEnum.North, mockCommunicator, planet);
+
+            // WHEN / THEN (ensure no exception is thrown)
+            rover.listenAndExecute();
+        }
+
+        @Test
+        void listenAndExecute_invalidInstructions() throws IOException {
+            // GIVEN
+            Planet planet = new Planet("Mars", 5, 5);
+            CommunicatorTCP mockCommunicator = new CommunicatorTCP();
+            Connection mockConnection = new Connection();
+            mockConnection.in = new BufferedReader(new StringReader("INVALID_COMMAND\n"));
+            mockConnection.out = new PrintWriter(new StringWriter(), true);
+            mockCommunicator.setMockConnection(mockConnection);
+            Rover rover = new Rover(OrientationEnum.North, mockCommunicator, planet);
 
             // WHEN
-            Information result = rover.ProcessInstruction(instructions);
+            rover.listenAndExecute();
 
             // THEN
-            assertTrue(result.success, "Multiple valid instructions should succeed.");
-            assertEquals(1, result.position.x);
-            assertEquals(1, result.position.y);
-            assertEquals(OrientationEnum.East, result.orientation);
+            assertEquals(0, rover.getPosition().x);
+            assertEquals(0, rover.getPosition().y); // No movement expected
+            assertEquals(OrientationEnum.North, rover.getOrientation());
         }
+
     }
 }

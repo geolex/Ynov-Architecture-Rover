@@ -2,7 +2,7 @@ package org.ynov.world;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.ynov.communication.CommunicatorTCP;
+import org.ynov.tcp.CommunicatorTCP;
 import org.ynov.rover.Rover;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
