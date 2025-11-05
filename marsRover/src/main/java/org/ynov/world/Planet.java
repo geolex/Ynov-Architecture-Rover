@@ -11,16 +11,23 @@ public class Planet {
 
     static Planet planet;
     private String name;
-    private int width;
-    private int height;
+    private Vector2 size;
     private Element[][] elements;
 
     public Planet(String name, int size, int numberElements) {
+        this(name, size, generateObstacles(numberElements, new Vector2 (size, size)));
+    }
+
+    public Planet(String name, int size, List<Vector2> obstacles) {
         this.name = name;
-        this.width = size;
-        this.height = size;
-        this.elements = new Element[width][height];
-        generateObstacles(numberElements);
+        this.size.x = size;
+        this.size.y = size;
+        this.elements = new Element[this.size.x][this.size.y];
+
+        for(Vector2 obstacle : obstacles) {
+            elements[obstacle.x][obstacle.y] = new Element(TypeElement.OBSTACLE, obstacle);
+        }
+
         planet = this;
     }
 
@@ -58,7 +65,7 @@ public class Planet {
     }
 
     public void addRover(Rover rover) {
-        if(!(rover.getPosition().x < 0 || rover.getPosition().x > width) || !(rover.getPosition().y < 0 || rover.getPosition().y >= height))
+        if(!(rover.getPosition().x < 0 || rover.getPosition().x > size.x) || !(rover.getPosition().y < 0 || rover.getPosition().y >= size.y))
             elements[rover.getPosition().x][rover.getPosition().y] = new Element(TypeElement.ROVER, rover.getPosition());
         else
             System.out.println("The Rover coordinates can't be higher than the planet");
@@ -69,12 +76,12 @@ public class Planet {
             addElement(obstacle);
     }
 
-    private void generateObstacles(int numberObstacles) {
+    private static List<Vector2> generateObstacles(int numberObstacles, Vector2 size) {
+        List<Vector2> obstacles = new ArrayList<Vector2>();
         for (int i = 0; i < numberObstacles; i++) {
-            Element obstacle = new Element(TypeElement.OBSTACLE);
-            obstacle.setPosition(addRandomData(obstacle.getPosition()));
-            addElement(obstacle);
+            obstacles.add(Vector2.Random(Vector2.ZERO, size));
         }
+        return obstacles;
     }
 
     private boolean obstacleAlreadyExists(int x, int y) {
@@ -87,10 +94,10 @@ public class Planet {
     }
 
     Vector2 addRandomData(Vector2 position) {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                position.x = (int) (Math.random() * width);
-                position.y = (int) (Math.random() * height);
+        for (int i = 0; i < size.x; i++) {
+            for (int j = 0; j < size.y; j++) {
+                position.x = (int) (Math.random() * size.x);
+                position.y = (int) (Math.random() * size.y);
             }
         }
         return position;
