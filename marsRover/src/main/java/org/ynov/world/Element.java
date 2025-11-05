@@ -10,7 +10,7 @@ public class Element {
     private TypeElement type;
 
     public Element(TypeElement type){
-        this(type, Vector2.zero);
+        this(type, Vector2.ZERO);
     }
 
     public Element(TypeElement typeElement, Vector2 position) {

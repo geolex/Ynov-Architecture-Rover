@@ -19,8 +19,6 @@ public class MissionControl implements KeyListener {
     Connection connection;
     private Vector2 lastRoverPos = null;
 
-
-
     public MissionControl(ICommunicator communicator) {
         System.out.println("Welcome to Kerbal's Mars Rover Program");
         this.connection = communicator.HostCommunication();
@@ -90,11 +88,21 @@ public class MissionControl implements KeyListener {
         // effacer ancienne position du rover
         if (lastRoverPos != null) {
             map.setCell(lastRoverPos, TypeElement.EMPTY);
-        }
 
-        // placer le rover à la nouvelle position
-        map.setCell(info.position, TypeElement.ROVER);
-        lastRoverPos = info.position;
+        if(info.success)
+            map.setCell(info.position, TypeElement.ROVER);
+            lastRoverPos = info.position;
+        else{
+            //Vector2 direction = switch (info.orientation){
+            //    case North -> Vector2.NORTH;
+            //    case East -> Vector2.EAST;
+            //    case South -> Vector2.SOUTH;
+            //    case West -> Vector2.WEST;
+            //    default -> Vector2.ZERO;
+            //};
+
+            //map.setCell(info.position.add(direction), TypeElement.OBSTACLE);
+        }
 
         // afficher infos en console
         System.out.println("Rover -> position: (" + info.position.x + "," + info.position.y + "), orientation: " + info.orientation + ", success: " + info.success);
