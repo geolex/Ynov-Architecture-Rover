@@ -45,16 +45,18 @@ public class Rover extends Element {
         switch (instruction) {
             case Forward:
                 switch (orientation) {
-                    case North: y++; break;
-                    case South: y--; break;
+                    // Nord -> remonter dans la console : y--
+                    case North: y--; break;
+                    case South: y++; break;
                     case East:  x++; break;
                     case West:  x--; break;
                 }
                 break;
             case Backward:
+                // backward = inverse de forward
                 switch (orientation) {
-                    case North: y--; break;
-                    case South: y++; break;
+                    case North: y++; break;
+                    case South: y--; break;
                     case East:  x--; break;
                     case West:  x++; break;
                 }
@@ -114,12 +116,10 @@ public class Rover extends Element {
         }
 
         try {
-            // L'envoi initial a déjà été fait dans le constructeur ; boucle normale de traitement
             while (true) {
                 String last = connection.in.readLine();
                 if (last == null) break;
 
-                // vider le buffer si plusieurs lignes arrivent rapidement (garde la dernière lue)
                 while (connection.in.ready()) {
                     String next = connection.in.readLine();
                     if (next == null) break;

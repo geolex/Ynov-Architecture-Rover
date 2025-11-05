@@ -1,56 +1,56 @@
+//java
 package org.ynov.missionControl;
 
-import lombok.Getter;
 import org.ynov.world.TypeElement;
 import org.ynov.world.Vector2;
 
-import java.util.*;
-
-@Getter
 public class Map {
-
-    private TypeElement[][] cells;
+    private final TypeElement[][] cells; // cells[row][col] => cells[y][x]
+    private final int width;
+    private final int height;
 
     public Map(int width, int height) {
-        cells = new TypeElement[width][height];
+        this.width = width;
+        this.height = height;
+        this.cells = new TypeElement[height][width]; // height = nb de lignes (y), width = nb de colonnes (x)
     }
 
-    public static void printMap(int mat[][]) {
-        for (int[] row : mat)
-            System.out.println(Arrays.toString(row));
+    public void setCell(Vector2 pos, TypeElement element) {
+        if (pos == null) return;
+        int x = pos.x;
+        int y = pos.y;
+        if (x < 0 || x >= width || y < 0 || y >= height) return;
+        cells[y][x] = element; // indexer par [y][x]
     }
 
-    public void setCell(Vector2 position, TypeElement typeElement){
-        cells[position.x][position.y] = typeElement;
+    public TypeElement getCell(Vector2 pos) {
+        if (pos == null) return null;
+        int x = pos.x;
+        int y = pos.y;
+        if (x < 0 || x >= width || y < 0 || y >= height) return null;
+        return cells[y][x];
     }
 
-    public void printMapAscii(){
-        boolean isFirstColumn;
-
-        String result = "";
-        //result += asciiLine(cells.length-1) + "\n";
-
-        for(TypeElement[] column : cells){
-            isFirstColumn = true;
-            for(TypeElement element : column){
-                if(isFirstColumn){
-                    //result += '|';
-                    //isFirstColumn = false;
+    public void printMapAscii() {
+        for (int row = 0; row < height; row++) {
+            StringBuilder sb = new StringBuilder();
+            for (int col = 0; col < width; col++) {
+                TypeElement e = cells[row][col];
+                if (e == null) {
+                    sb.append('?');
+                } else {
+                    switch (e) {
+                        case EMPTY -> sb.append(' ');
+                        case ROVER -> sb.append('@');
+                        case OBSTACLE -> sb.append('#');
+                        default -> sb.append('?');
+                    }
                 }
-                result += switch (element) {
-                    case OBSTACLE -> '#';
-                    case ROVER -> '@';
-                    case EMPTY -> ' ';
-                    case null -> '?';
-                };
-                //result += '|';
             }
-            result += "\n";// + asciiLine(cells.length-1) + "\n";
+            System.out.println(sb.toString());
         }
-        System.out.println(result);
     }
 
-    public String asciiLine(int nbElements){
-        return "_" + "__".repeat(Math.max(0, nbElements));
-    }
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
 }
