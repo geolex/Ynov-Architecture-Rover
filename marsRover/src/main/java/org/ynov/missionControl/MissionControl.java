@@ -151,22 +151,27 @@ public class MissionControl implements KeyListener {
 
     private void UpdateMap(Information info) {
         // effacer ancienne position du rover
+
         if (lastRoverPos != null) {
             map.setCell(lastRoverPos, TypeElement.EMPTY);
         }
-        if (info.success) {
-            map.setCell(info.position, TypeElement.ROVER);
-            lastRoverPos = info.position;
-        } else {
-            //Vector2 direction = switch (info.orientation){
-            //    case North -> Vector2.NORTH;
-            //    case East -> Vector2.EAST;
-            //    case South -> Vector2.SOUTH;
-            //    case West -> Vector2.WEST;
-            //    default -> Vector2.ZERO;
-            //};
+        map.setCell(info.position, TypeElement.ROVER);
+        lastRoverPos = info.position;
 
-            //map.setCell(info.position.add(direction), TypeElement.OBSTACLE);
+        if (info.success) {
+
+
+
+        } else {
+            Vector2 direction = switch (info.orientation){
+                case North -> Vector2.UP;
+                case East -> Vector2.RIGHT;
+                case South -> Vector2.DOWN;
+                case West -> Vector2.LEFT;
+                default -> Vector2.ZERO;
+            };
+
+            map.setCell(Vector2.add(info.position, direction).modulo(map.getWidth(), map.getHeight()), TypeElement.OBSTACLE);
         }
 
         // afficher infos en console

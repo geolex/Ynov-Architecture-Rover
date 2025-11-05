@@ -4,20 +4,19 @@ import lombok.NoArgsConstructor;
 import org.ynov.communication.IntParser;
 import java.util.Random;
 
-import java.util.Random;
-
 @NoArgsConstructor
 public class Vector2 {
     public static final Vector2 ZERO = new Vector2(0, 0);
-    public static final Vector2 NORTH = new Vector2(0, 1);
-    public static final Vector2 WEST = new Vector2(1, 0);
-    public static final Vector2 SOUTH = new Vector2(0, -1);
-    public static final Vector2 EAST = new Vector2(-1, 0);
+    public static final Vector2 UP = new Vector2(0, 1);
+    public static final Vector2 RIGHT = new Vector2(1, 0);
+    public static final Vector2 DOWN = new Vector2(0, -1);
+    public static final Vector2 LEFT = new Vector2(-1, 0);
 
     public int x;
     public int y;
 
     public Vector2(int a, int b){ this.x = a; this.y = b; }
+    public Vector2(Vector2 v){ this.x = v.x; this.y = v.y; }
 
     public String toString(){
         return "("+x+","+y+")";
@@ -49,5 +48,16 @@ public class Vector2 {
         this.x += vector.x;
         this.y += vector.y;
         return this;
+    }
+
+    public Vector2 modulo(int maxX, int maxY){
+        this.x = (this.x + maxX) % maxX;
+        this.y = (this.y + maxY) % maxY;
+        return this;
+    }
+
+    public static Vector2 add(Vector2 vector1, Vector2 vector2){
+        Vector2 results = new Vector2(vector1);
+        return results.add(vector2);
     }
 }
