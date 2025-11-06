@@ -69,8 +69,8 @@ public class Rover extends Element {
                 return true;
         }
 
-        x = (x + planet.getWidth()) % planet.getWidth();
-        y = (y + planet.getHeight()) % planet.getHeight();
+        x = (x + planet.getSize().x) % planet.getSize().x;
+        y = (y + planet.getSize().y) % planet.getSize().y;
 
         if (isValidPosition(x, y)) {
             position.x = x;
@@ -81,7 +81,7 @@ public class Rover extends Element {
     }
 
     private boolean isValidPosition(int x, int y) {
-        if (x < 0 || x >= planet.getWidth() || y < 0 || y >= planet.getHeight()) return false;
+        if (x < 0 || x >= planet.getSize().x || y < 0 || y >= planet.getSize().y) return false;
         return planet.GetElement(new Vector2(x, y)) == null;
     }
 
