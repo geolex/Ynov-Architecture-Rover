@@ -11,7 +11,7 @@ public class Planet {
 
     static Planet planet;
     private String name;
-    private Vector2 size = new Vector2(0, 0);
+    private Vector2 size;
     private Element[][] elements;
 
     public Planet(String name, int size, int numberElements) {
@@ -20,8 +20,7 @@ public class Planet {
 
     public Planet(String name, int size, List<Vector2> obstacles) {
         this.name = name;
-        this.size.x = size;
-        this.size.y = size;
+        this.size = new Vector2(size, size);
         this.elements = new Element[this.size.x][this.size.y];
 
         for(Vector2 obstacle : obstacles) {
