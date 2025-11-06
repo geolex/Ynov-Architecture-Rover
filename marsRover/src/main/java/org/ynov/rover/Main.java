@@ -3,7 +3,7 @@ package org.ynov.rover;
 import org.ynov.tcp.CommunicatorTCP;
 import org.ynov.world.OrientationEnum;
 import org.ynov.world.Planet;
-
+import org.ynov.world.PlanetFrame;
 
 public class Main {
 
@@ -12,6 +12,10 @@ public class Main {
         int taille = 10;
         Planet planet = new Planet("Mars", 4, 5);
         Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet);
+
+        planet.addRover(rover);
+        PlanetFrame frame = new PlanetFrame(planet);
+        frame.view();
 
         // Affichage de l'état initial
         System.out.println("Position initiale du rover : " + rover.getPosition());

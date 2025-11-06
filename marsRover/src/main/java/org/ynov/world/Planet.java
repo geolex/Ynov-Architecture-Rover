@@ -11,7 +11,7 @@ public class Planet {
 
     static Planet planet;
     private String name;
-    private Vector2 size;
+    private Vector2 size = new Vector2(0, 0);
     private Element[][] elements;
 
     public Planet(String name, int size, int numberElements) {
