@@ -26,7 +26,7 @@ public class MissionControl implements KeyListener {
     public MissionControl(ICommunicator communicator) {
         System.out.println("Welcome to Kerbal's Mars Rover Program");
         this.connection = communicator.HostCommunication();
-        map = new Map(Planet.getPlanet().getWidth(),  Planet.getPlanet().getHeight());
+        map = new Map(Planet.getPlanet().getSize().x,  Planet.getPlanet().getSize().y);
 
         // Lecture du handshake initial envoyé par le rover (position + orientation)
         try {
@@ -147,39 +147,68 @@ public class MissionControl implements KeyListener {
             e.printStackTrace();
         }
     }
+    private Vector2 toMapCoords(Vector2 pos) {
+        int height = Planet.getPlanet().getSize().y;
+        return new Vector2(pos.x, height - 1 - pos.y);
+    }
 
+    private Vector2 orientationToDirection(Object orientation) {
+        String orient = orientation == null ? "" : orientation.toString().toLowerCase();
+        return switch (orient) {
+            case "north", "n", "up" -> new Vector2(0, 1);
+            case "east", "e", "right" -> new Vector2(1, 0);
+            case "south", "s", "down" -> new Vector2(0, -1);
+            case "west", "w", "left" -> new Vector2(-1, 0);
+            default -> new Vector2(0, 0);
+        };
+    }
 
     private void UpdateMap(Information info) {
         // effacer ancienne position du rover
-
-        if (lastRoverPos != null) {
-            map.setCell(lastRoverPos, TypeElement.EMPTY);
+        if (info == null || info.position == null) {
+            // rien à faire si info invalide
+            return;
         }
-        map.setCell(info.position, TypeElement.ROVER);
-        lastRoverPos = info.position;
 
+        // Si première réception, afficher la position initiale sans effacer
+        if (lastRoverPos == null) {
+            Vector2 initMapPos = toMapCoords(info.position);
+            map.setCell(initMapPos, TypeElement.ROVER);
+            lastRoverPos = initMapPos;
+        }
         if (info.success) {
-
-
-
+            Vector2 newMapPos = toMapCoords(info.position);
+            // ne supprimer l'ancienne case que si le rover a réellement changé de case
+            if (lastRoverPos == null || newMapPos.x != lastRoverPos.x || newMapPos.y != lastRoverPos.y) {
+                if (lastRoverPos != null) {
+                    map.setCell(lastRoverPos, TypeElement.EMPTY);
+                }
+                map.setCell(newMapPos, TypeElement.ROVER);
+                lastRoverPos = newMapPos;
+            }
         } else {
-            Vector2 direction = switch (info.orientation){
-                case North -> Vector2.UP;
-                case East -> Vector2.RIGHT;
-                case South -> Vector2.DOWN;
-                case West -> Vector2.LEFT;
-                default -> Vector2.ZERO;
-            };
+            // mouvement bloqué : ne pas effacer le rover, marquer l'obstacle devant
+            Vector2 direction = orientationToDirection(info.orientation);
+            Vector2 obstacleLogical = info.position.add(direction);
 
-            map.setCell(Vector2.add(info.position, direction).modulo(map.getWidth(), map.getHeight()), TypeElement.OBSTACLE);
+            int width = Planet.getPlanet().getSize().x;
+            int height = Planet.getPlanet().getSize().y;
+            if (obstacleLogical.x >= 0 && obstacleLogical.x < width && obstacleLogical.y >= 0 && obstacleLogical.y < height) {
+                Vector2 obstacleMapPos = toMapCoords(obstacleLogical);
+                // Ne pas écraser l'affichage du rover
+                if (lastRoverPos == null || obstacleMapPos.x != lastRoverPos.x || obstacleMapPos.y != lastRoverPos.y) {
+                    map.setCell(obstacleMapPos, TypeElement.OBSTACLE);
+                }
+            }
         }
 
-        // afficher infos en console
         System.out.println("Rover -> position: (" + info.position.x + "," + info.position.y + "), orientation: " + info.orientation + ", success: " + info.success);
-
         map.printMapAscii();
         PromptUser();
     }
+
+
+
 
     @Override
     public void keyTyped(KeyEvent e) {
