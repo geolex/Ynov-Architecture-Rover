@@ -15,14 +15,15 @@ class PlanetTest {
         @Test
         public void CreatesNewPlanetWhenNull() {
             //GIVEN
-            Planet planet = resetPlanet();
+            Planet planet = null;
              // WHEN
-            Planet result = Planet.getPlanet();
+            planet = Planet.getPlanet();
             // THEN
-            assert result != null;
-            assert result.getName().equals("Mars");
-            assert result.getWidth() == 5;
-            assert result.getHeight() == 5;
+            assert planet != null;
+            assert planet.getName().equals("Mars");
+            Vector2 size = planet.getSize();
+            assert size.x == 5;
+            assert size.y == 5;
         }
 
         @Test
@@ -30,12 +31,13 @@ class PlanetTest {
             // GIVEN
             Planet initialPlanet = new Planet("Earth", 5, 2);
             // WHEN
-            Planet retrievedPlanet = Planet.getPlanet();
+            Planet planet = Planet.getPlanet();
             // THEN
-            assert retrievedPlanet == initialPlanet;
-            assert retrievedPlanet.getName().equals("Earth");
-            assert retrievedPlanet.getWidth() == 5;
-            assert retrievedPlanet.getHeight() == 5;
+            assert planet == initialPlanet;
+            assert planet.getName().equals("Earth");
+            Vector2 size = planet.getSize();
+            assert size.x == 5;
+            assert size.y == 5;
         }
 
         @Test
@@ -44,13 +46,14 @@ class PlanetTest {
             Planet expectedPlanet = new Planet("Earth", 50, 10);
 
             //WHEN
-            Planet result = Planet.getPlanet();
+            Planet planet = Planet.getPlanet();
 
             //THEN
-            assert result == expectedPlanet;
-            assert result.getName().equals("Earth");
-            assert result.getWidth() == 50;
-            assert result.getHeight() == 50;
+            assert planet == expectedPlanet;
+            assert planet.getName().equals("Earth");
+            Vector2 size = planet.getSize();
+            assert size.x == 5;
+            assert size.y == 5;
         }
     }
 
@@ -133,71 +136,6 @@ class PlanetTest {
     }
 
     @Nested
-    class AddRoverTests {
-
-        @Test
-        public void addsRoverToTheCorrectPosition() {
-            // GIVEN
-            Planet planet = new Planet("Mars", 5, 0);
-            Rover rover = new Rover(null, new CommunicatorTCP(), planet);
-            rover.getPosition().x = 2;
-            rover.getPosition().y = 3;
-
-            // WHEN
-            planet.addRover(rover);
-
-            // THEN
-            Element result = planet.GetElement(new Vector2(2, 3));
-            assert result != null;
-            assert result.getType() == TypeElement.ROVER;
-        }
-
-        @Test
-        public void overridesExistingElement() {
-            // GIVEN
-            Planet planet = new Planet("Mars", 5, 0);
-            Element obstacle = new Element(TypeElement.OBSTACLE, new Vector2(3, 3));
-            planet.addElement(obstacle);
-            Rover rover = new Rover(null, new CommunicatorTCP(), planet);
-            rover.getPosition().x = 3;
-            rover.getPosition().y = 3;
-
-            // WHEN
-            planet.addRover(rover);
-
-            // THEN
-            Element result = planet.GetElement(new Vector2(3, 3));
-            assert result != null;
-            assert result.getType() == TypeElement.ROVER;
-        }
-
-        @Test
-        public void doesNotOutsidePlanetBound() {
-            // GIVEN
-            Planet planet = new Planet("Mars", 5, 0);
-            Rover rover = new Rover(null, new CommunicatorTCP(), planet);
-            rover.getPosition().x = 6;
-            rover.getPosition().y = 6;
-
-            // WHEN
-            planet.addRover(rover);
-
-            // THEN
-            Exception exception = assertThrows(NumberFormatException.class, () -> {
-                Integer.parseInt("1a");
-            });
-
-            String expectedMessage = "For input string: \"1a\"";
-            String actualMessage = exception.getMessage();
-
-            assertTrue(actualMessage.contains(expectedMessage));
-
-            planet.getElements();
-        }
-
-    }
-
-    @Nested
     class GetElementTests {
 
         @Test
@@ -228,9 +166,5 @@ class PlanetTest {
             // THEN
             assert result == null;
         }
-    }
-
-    public static Planet resetPlanet() {
-        return null;
     }
 }

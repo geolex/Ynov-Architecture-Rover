@@ -12,8 +12,7 @@ public class Main {
         int taille = 10;
         Planet planet = new Planet("Mars", 4, 5);
         Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet);
-
-        planet.addRover(rover);
+        
         PlanetFrame frame = new PlanetFrame(planet);
         frame.view();
 

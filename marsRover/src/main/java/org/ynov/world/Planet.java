@@ -1,7 +1,6 @@
 package org.ynov.world;
 
 import lombok.Getter;
-import org.ynov.rover.Rover;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,13 +60,6 @@ public class Planet {
 
     public Element GetElement(Vector2 position){
         return elements[position.x][position.y];
-    }
-
-    public void addRover(Rover rover) {
-        if(!(rover.getPosition().x < 0 || rover.getPosition().x > size.x) || !(rover.getPosition().y < 0 || rover.getPosition().y >= size.y))
-            elements[rover.getPosition().x][rover.getPosition().y] = new Element(TypeElement.ROVER, rover.getPosition());
-        else
-            System.out.println("The Rover coordinates can't be higher than the planet");
     }
 
     public void addObstacle(Element obstacle) {
