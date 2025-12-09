@@ -1,7 +1,11 @@
 // java
 package org.ynov.missionControl;
 
-import org.ynov.communication.*;
+import org.ynov.communication.Connection;
+import org.ynov.communication.ICommunicator;
+import org.ynov.communication.Information;
+import org.ynov.communication.Instruction;
+import org.ynov.communication.InstructionEnum;
 import org.ynov.world.Planet;
 import org.ynov.world.TypeElement;
 import org.ynov.world.Vector2;
@@ -10,7 +14,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.Vector;
-import java.io.*;
 
 
 
@@ -187,7 +190,6 @@ public class MissionControl implements KeyListener {
                 lastRoverPos = newMapPos;
             }
         } else {
-            // mouvement bloqué : ne pas effacer le rover, marquer l'obstacle devant
             Vector2 direction = orientationToDirection(info.orientation);
             Vector2 obstacleLogical = info.position.add(direction);
 

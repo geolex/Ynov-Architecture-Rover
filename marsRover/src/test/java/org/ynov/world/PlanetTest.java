@@ -2,11 +2,6 @@ package org.ynov.world;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.ynov.tcp.CommunicatorTCP;
-import org.ynov.rover.Rover;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlanetTest {
 
@@ -14,16 +9,17 @@ class PlanetTest {
     class constructorTest {
         @Test
         public void CreatesNewPlanetWhenNull() {
-            //GIVEN
-            Planet planet = null;
-             // WHEN
-            planet = Planet.getPlanet();
+            // GIVEN
+            Planet.planet = null;
+
+            // WHEN
+            Planet planet = Planet.getPlanet();
+
             // THEN
             assert planet != null;
             assert planet.getName().equals("Mars");
-            Vector2 size = planet.getSize();
-            assert size.x == 5;
-            assert size.y == 5;
+            assert planet.getSize().x == 5;
+            assert planet.getSize().y == 5;
         }
 
         @Test
@@ -41,22 +37,21 @@ class PlanetTest {
         }
 
         @Test
-        public void returnsExistingPlanet() {
-            //GIVEN
-            Planet expectedPlanet = new Planet("Earth", 50, 10);
+        public void ReturnsExistingPlanetWhenPreviouslyCreated() {
+            // GIVEN
+            Planet initialPlanet = new Planet("Earth", 6, 2);
 
-            //WHEN
+            // WHEN
             Planet planet = Planet.getPlanet();
 
-            //THEN
-            assert planet == expectedPlanet;
+            // THEN
+            assert planet != null;
+            assert planet == initialPlanet;
             assert planet.getName().equals("Earth");
-            Vector2 size = planet.getSize();
-            assert size.x == 5;
-            assert size.y == 5;
+            assert planet.getSize().x == 6;
+            assert planet.getSize().y == 6;
         }
     }
-
 
     @Nested
     class ObstaclesTests {
