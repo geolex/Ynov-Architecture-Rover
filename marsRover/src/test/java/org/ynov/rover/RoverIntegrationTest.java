@@ -29,7 +29,7 @@ public class RoverIntegrationTest {
         });
 
 
-        Rover rover = new Rover(OrientationEnum.North, communicator, planet);
+        Rover rover = new Rover(OrientationEnum.North, communicator, planet, null);
 
         String handshake = readFuture.get(2, TimeUnit.SECONDS);
 

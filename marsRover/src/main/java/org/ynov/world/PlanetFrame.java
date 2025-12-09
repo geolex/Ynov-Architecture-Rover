@@ -34,6 +34,11 @@ public class PlanetFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    public void update() {
+        panel.repaint(); // Redessine la grille et les éléments
+    }
+
+
     private static String getPlanetNameSafe(Planet p) {
         try {
             Field f = Planet.class.getDeclaredField("name");

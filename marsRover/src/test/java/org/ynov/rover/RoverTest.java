@@ -18,7 +18,7 @@ public class RoverTest {
         void move() {
             //GIVEN
             Planet planet = new Planet("Mars", 5, 5);
-            Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet);
+            Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet, null);
 
             // WHEN
             boolean moved = rover.move(InstructionEnum.Forward);
@@ -32,7 +32,7 @@ public class RoverTest {
         void moveBackward () {
             //GIVEN
             Planet planet = new Planet("Mars", 5, 5);
-            Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet);
+            Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet, null);
 
             // WHEN
             boolean moved = rover.move(InstructionEnum.Backward);
@@ -47,7 +47,7 @@ public class RoverTest {
         void turnLeft() {
             //GIVEN
             Planet planet = new Planet("Mars", 5, 5);
-            Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet);
+            Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet, null);
 
             // WHEN
             boolean turned = rover.move(InstructionEnum.TurnLeft);
@@ -61,7 +61,7 @@ public class RoverTest {
         void turnRight() {
             //GIVEN
             Planet planet = new Planet("Mars", 5, 5);
-            Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet);
+            Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet, null);
 
             // WHEN
             boolean turned = rover.move(InstructionEnum.TurnRight);
@@ -80,7 +80,7 @@ public class RoverTest {
             // GIVEN
             Planet planet = new Planet("Mars", 5, 5);
             CommunicatorTCP mockCommunicator = new CommunicatorTCP(); // No connection will be established
-            Rover rover = new Rover(OrientationEnum.North, mockCommunicator, planet);
+            Rover rover = new Rover(OrientationEnum.North, mockCommunicator, planet,null);
 
             // WHEN / THEN (ensure no exception is thrown)
             rover.listenAndExecute();

@@ -15,13 +15,16 @@ public class Rover extends Element {
     private OrientationEnum orientation;
     private Connection connection;
     private final Planet planet;
+    private final PlanetFrame planetFrame; // Référence à la fenêtre
 
-    public Rover(OrientationEnum orientation, ICommunicator communicator, Planet planet) {
+    public Rover(OrientationEnum orientation, ICommunicator communicator, Planet planet, PlanetFrame planetFrame) {
         super(TypeElement.ROVER);
         this.position = new Vector2(0, 0);
         this.orientation = orientation;
         this.connection = communicator.ConnectToCommunication();
         this.planet = planet;
+        this.planetFrame = planetFrame;
+        planetFrame.view();
 
         // Envoi du handshake initial (position + orientation) immédiatement après connexion
         if (this.connection != null && this.connection.out != null) {
@@ -63,9 +66,11 @@ public class Rover extends Element {
                 break;
             case TurnLeft:
                 orientation = turnLeft(orientation);
+                updateFrame();
                 return true;
             case TurnRight:
                 orientation = turnRight(orientation);
+                updateFrame();
                 return true;
         }
 
@@ -75,6 +80,7 @@ public class Rover extends Element {
         if (isValidPosition(x, y)) {
             position.x = x;
             position.y = y;
+            updateFrame(); // Mise à jour de l'interface graphique
             return true;
         }
         return false;
@@ -145,4 +151,10 @@ public class Rover extends Element {
         return new Information(position, success, orientation);
     }
 
+    // Méthode pour rafraîchir la fenêtre après chaque changement d'état
+    private void updateFrame() {
+        if (planetFrame != null) {
+            planetFrame.update(); // Actualise l'affichage
+        }
+    }
 }

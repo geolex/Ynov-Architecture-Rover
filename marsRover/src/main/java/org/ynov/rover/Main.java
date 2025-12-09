@@ -11,10 +11,7 @@ public class Main {
         // Création de la planète
         int taille = 10;
         Planet planet = new Planet("Mars", 4, 5);
-        Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet);
-        
-        PlanetFrame frame = new PlanetFrame(planet);
-        frame.view();
+        Rover rover = new Rover(OrientationEnum.North, new CommunicatorTCP(), planet, new PlanetFrame(planet));
 
         // Affichage de l'état initial
         System.out.println("Position initiale du rover : " + rover.getPosition());

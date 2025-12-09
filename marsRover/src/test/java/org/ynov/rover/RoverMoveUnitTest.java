@@ -28,7 +28,7 @@ public class RoverMoveUnitTest {
     @Test
     public void processInstructionVector() {
         Planet planet = new Planet("P", 5, 5);
-        Rover rover = new Rover(OrientationEnum.North, new FixedCommunicator(dummyConnection()), planet);
+        Rover rover = new Rover(OrientationEnum.North, new FixedCommunicator(dummyConnection()), planet, null);
 
         Vector<Instruction> instructions = new Vector<>();
         instructions.add(new Instruction(InstructionEnum.Forward));
